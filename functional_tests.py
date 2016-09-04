@@ -13,7 +13,7 @@ class FunctionalTest(unittest.TestCase):
         self.browser.get('http://localhost:8000')
 
         # Make sure the title has the app name
-        self.assertIn('Django', self.browser.title)
+        self.assertIn('Fibonacci Numbers', self.browser.title)
 
         # There should be a input tag to enter 'N'
 
