@@ -1,8 +1,9 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
 
-class FunctionalTest(unittest.TestCase):
+class FunctionalTest(LiveServerTestCase):
     def setUp(self):
         # User Chrome as its the mostly used browser
         self.browser = webdriver.Chrome()
@@ -15,8 +16,8 @@ class FunctionalTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
-    def test_boilerplate(self):
-        self.browser.get('http://localhost:8000')
+    def test_basic_functionality_of_boilerplate(self):
+        self.browser.get(self.live_server_url)
 
         # Make sure the title has the app name
         self.assertIn('Fibonacci Numbers', self.browser.title)
@@ -36,8 +37,4 @@ class FunctionalTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         # self.assertIn('6', [row.text for row in rows])
         self.check_for_row_in_table('6')
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
 
