@@ -1,3 +1,15 @@
 <html>
-  <title>Fibonacci Numbers</title>
+  <head>
+    <title>Fibonacci Numbers</title>
+  </head>
+  <body>
+    <h1>Fibonacci Numbers</h1>
+    <form method="POST">
+      <input name="new_n" id="id_new_n" placeholder="Enter 'N'" />
+      {% csrf_token %}
+    </form>
+    <table id="id_numbers_table">
+      <tr><td>{{ new_nth_number }}</td></tr>
+    </table>
+  </body>
 </html>

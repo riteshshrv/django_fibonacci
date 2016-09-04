@@ -10,6 +10,11 @@ class FunctionalTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_table(self, row_text):
+        table = self.browser.find_element_by_id('id_numbers_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_boilerplate(self):
         self.browser.get('http://localhost:8000')
 
@@ -28,8 +33,9 @@ class FunctionalTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_numbers_table')
-        rows = table.find_element_by_tag_name('tr')
-        self.assertTrue(any(row.text == '8' for row in rows))
+        rows = table.find_elements_by_tag_name('tr')
+        # self.assertIn('6', [row.text for row in rows])
+        self.check_for_row_in_table('6')
 
 
 if __name__ == '__main__':

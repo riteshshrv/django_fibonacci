@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 
 from fibonacci_numbers.views import home_page
 
+
 class HomePageTest(TestCase):
     def test_root_url_resolves_to_home_page_view(self):
         found = resolve('/')
@@ -16,3 +17,12 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
+    def test_home_page_can_save_a_POST_request(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['new_n'] = 6
+
+        response = home_page(request)
+        self.assertIn('6', response.content.decode())
+        expected_html = render_to_string('home.html', {'new_nth_number': 6})
+        self.assertEqual(response.content.decode(), expected_html)
