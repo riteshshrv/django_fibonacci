@@ -1,5 +1,6 @@
 import unittest
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 class FunctionalTest(unittest.TestCase):
     def setUp(self):
@@ -14,11 +15,21 @@ class FunctionalTest(unittest.TestCase):
 
         # Make sure the title has the app name
         self.assertIn('Fibonacci Numbers', self.browser.title)
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('Fibonacci Numbers', header_text)
 
         # There should be a input tag to enter 'N'
+        inputbox = self.browser.find_element_by_id('id_new_n')
+        self.assertEqual(inputbox.get_attribute('placeholder'), "Enter 'N'")
 
         # Hitting Enter should make a POST request to get the Nth
         # number and display it on page
+        inputbox.send_keys(6)
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.find_element_by_id('id_numbers_table')
+        rows = table.find_element_by_tag_name('tr')
+        self.assertTrue(any(row.text == '8' for row in rows))
 
 
 if __name__ == '__main__':
