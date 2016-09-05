@@ -33,4 +33,6 @@ class FunctionalTest(LiveServerTestCase):
         inputbox.send_keys(6)
         inputbox.send_keys(Keys.ENTER)
 
-        self.check_for_row_in_table('8')
+        # The response now shows the result prefixed with the counter
+        # and its the first request in test so, it should be prefixed with 1
+        self.check_for_row_in_table('1: 8')

@@ -9,7 +9,9 @@
       {% csrf_token %}
     </form>
     <table id="id_numbers_table">
-      <tr><td>{{ new_nth_number }}</td></tr>
+      {% for number in numbers %}
+        <tr><td>{{ forloop.counter }}: {{ number.result }}</td></tr>
+      {% endfor %}
     </table>
   </body>
 </html>

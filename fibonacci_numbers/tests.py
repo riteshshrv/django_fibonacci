@@ -30,6 +30,24 @@ class HomePageTest(TestCase):
         new_nth_number = Fibonacci.objects.first()
         self.assertEqual(new_nth_number.result, '8')
 
+    def test_home_page_displays_all_calculations(self):
+        first_result = str(get_fibonacci_number(14))
+        second_result = str(get_fibonacci_number(123))
+
+        Fibonacci.objects.create(
+            parameter=14, result=first_result
+        )
+        Fibonacci.objects.create(
+            parameter=123, result=second_result
+        )
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn(first_result, response.content.decode())
+        self.assertIn(second_result, response.content.decode())
+
+
     def test_home_page_redirects_after_POST(self):
         request = HttpRequest()
         request.method = 'POST'
