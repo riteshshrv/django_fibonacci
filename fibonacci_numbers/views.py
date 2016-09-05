@@ -23,5 +23,5 @@ def home_page(request):
                 result.save()
                 return redirect('/')
 
-    numbers = Fibonacci.objects.all()
+    numbers = Fibonacci.objects.all().order_by('-parameter')[:10]
     return render(request, 'home.html', {'numbers': numbers})
