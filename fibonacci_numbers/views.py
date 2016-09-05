@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 
 from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
