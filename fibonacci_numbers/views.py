@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
 from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
@@ -21,7 +21,6 @@ def home_page(request):
                 result = str(get_fibonacci_number(n))
                 result = Fibonacci(n, result)
                 result.save()
+                return redirect('/')
 
-    return render(request, 'home.html', {
-        'new_nth_number': result and result.result or ''
-    })
+    return render(request, 'home.html')

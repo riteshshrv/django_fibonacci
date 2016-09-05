@@ -30,9 +30,15 @@ class HomePageTest(TestCase):
         new_nth_number = Fibonacci.objects.first()
         self.assertEqual(new_nth_number.result, '8')
 
-        self.assertIn('8', response.content.decode())
-        expected_html = render_to_string('home.html', {'new_nth_number': 8})
-        self.assertEqual(response.content.decode(), expected_html)
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['new_n'] = 6
+
+        response = home_page(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
 
     def test_home_page_creates_record_only_when_necessary(self):
         """
