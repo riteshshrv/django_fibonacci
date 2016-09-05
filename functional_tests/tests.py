@@ -35,6 +35,5 @@ class FunctionalTest(LiveServerTestCase):
 
         table = self.browser.find_element_by_id('id_numbers_table')
         rows = table.find_elements_by_tag_name('tr')
-        # self.assertIn('6', [row.text for row in rows])
-        self.check_for_row_in_table('6')
+        self.check_for_row_in_table('8')
 
