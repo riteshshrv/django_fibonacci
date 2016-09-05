@@ -1,7 +1,7 @@
-import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
+
 
 class FunctionalTest(LiveServerTestCase):
     def setUp(self):
@@ -33,7 +33,4 @@ class FunctionalTest(LiveServerTestCase):
         inputbox.send_keys(6)
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_numbers_table')
-        rows = table.find_elements_by_tag_name('tr')
         self.check_for_row_in_table('8')
-

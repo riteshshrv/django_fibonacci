@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from fibonacci_numbers.views import home_page
 from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
 
+
 class HomePageTest(TestCase):
     def test_root_url_resolves_to_home_page_view(self):
         found = resolve('/')
@@ -51,5 +52,9 @@ class FibonacciModel(TestCase):
 
         first_saved_number = saved_numbers[0]
         second_saved_number = saved_numbers[1]
-        self.assertEqual(first_saved_number.result, str(get_fibonacci_number(0)))
-        self.assertEqual(second_saved_number.result, str(get_fibonacci_number(1)))
+        self.assertEqual(
+            first_saved_number.result, str(get_fibonacci_number(0))
+        )
+        self.assertEqual(
+            second_saved_number.result, str(get_fibonacci_number(1))
+        )
