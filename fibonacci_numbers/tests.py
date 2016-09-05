@@ -34,6 +34,24 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html', {'new_nth_number': 8})
         self.assertEqual(response.content.decode(), expected_html)
 
+    def test_home_page_creates_record_only_when_necessary(self):
+        """
+        If a POST request is made without any number then
+        (at least for now) a GET request is rendered
+        """
+        request = HttpRequest()
+        request.method = 'POST'
+
+        response = home_page(request)
+
+        # No numbers were give in the input tag so, no records
+        # should be created
+        self.assertEqual(Fibonacci.objects.count(), 0)
+
+        # self.assertIn('8', response.content.decode())
+        expected_html = render_to_string('home.html', {'new_nth_number': ''})
+        self.assertEqual(response.content.decode(), expected_html)
+
 
 class FibonacciModel(TestCase):
     def test_saving_and_retrieving_numbers(self):
