@@ -54,27 +54,39 @@ class FibonacciAndListModelTest(TestCase):
         self.assertEqual(second_saved_number.list, list_)
 
 
-class UsersViewTest(TestCase):
+class ListsViewTest(TestCase):
     def test_uses_list_template(self):
-        response = self.client.get('/lists/only-person/')
+        list_ = List.objects.create()
+        response = self.client.get('/lists/%d/' % list_.id)
         self.assertTemplateUsed(response, 'list.html')
 
-    def test_display_all_calculations(self):
-        list_ = List.objects.create()
+    def test_displays_numbers_only_for_that_list(self):
+        correct_list = List.objects.create()
         first_result = str(get_fibonacci_number(14))
         second_result = str(get_fibonacci_number(123))
-
         Fibonacci.objects.create(
-            parameter=14, list=list_, result=first_result
+            parameter=14, list=correct_list, result=first_result
         )
         Fibonacci.objects.create(
-            parameter=123, list=list_, result=second_result
+            parameter=123, list=correct_list, result=second_result
         )
 
-        response = self.client.get('/lists/only-person/')
+        other_list = List.objects.create()
+        third_result = str(get_fibonacci_number(76))
+        fourth_result = str(get_fibonacci_number(67))
+        Fibonacci.objects.create(
+            parameter=76, list=other_list, result=third_result
+        )
+        Fibonacci.objects.create(
+            parameter=67, list=other_list, result=fourth_result
+        )
+
+        response = self.client.get('/lists/%d/' % correct_list.id)
 
         self.assertContains(response, first_result)
         self.assertContains(response, second_result)
+        self.assertNotContains(response, third_result)
+        self.assertNotContains(response, fourth_result)
 
 
 class NewListTest(TestCase):
@@ -91,7 +103,8 @@ class NewListTest(TestCase):
             '/lists/new', data={'new_n': 6}
         )
 
+        new_list = List.objects.first()
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            urlsplit(response['location']).path, '/lists/only-person'
+            urlsplit(response['location']).path, '/lists/%d' % new_list.id
         )
