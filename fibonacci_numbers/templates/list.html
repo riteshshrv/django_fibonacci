@@ -6,8 +6,11 @@
 
 {% block table %}
 <table id="id_numbers_table" class="table">
+    {% if request.session.time_elapsed %}
+        <tr><td>Time Elapsed:&nbsp;&nbsp;{{request.session.time_elapsed}}</td></tr>
+    {% endif %}
   {% for number in list.fibonacci_set.all %}
-    <tr><td>{{ forloop.counter }}: {{ number.result }}</td></tr>
+    <tr><td>{{ forloop.counter }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ number.result }}</td></tr>
   {% endfor %}
 </table>
 {% endblock %}

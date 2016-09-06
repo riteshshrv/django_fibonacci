@@ -1,3 +1,5 @@
+from time import clock
+
 from django.db import models
 
 
@@ -19,3 +21,14 @@ class Fibonacci(models.Model):
     parameter = models.IntegerField(primary_key=True)
     list = models.ForeignKey(List, default=None)
     result = models.CharField(max_length=200)
+
+
+class MyMiddleware(object):
+    def process_request(self, request):
+        request.session['_request_time'] = clock()
+
+    def process_response(self, request, response):
+        if request.session.get('_request_time'):
+            response_time = clock() - request.session['_request_time']
+            request.session['time_elapsed'] = "{:.8f}".format(response_time)
+        return response
