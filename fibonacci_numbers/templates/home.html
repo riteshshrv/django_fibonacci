@@ -1,12 +1,5 @@
-<html>
-  <head>
-    <title>Fibonacci Numbers</title>
-  </head>
-  <body>
-    <h1>Start Playing with Fibonacci Numbers</h1>
-    <form method="POST" action="/lists/new">
-      <input name="new_n" id="id_new_n" placeholder="Enter 'N'" />
-      {% csrf_token %}
-    </form>
-  </body>
-</html>
+{% extends 'base.html' %}
+
+{% block header_text %}Start Playing with Fibonacci Numbers{% endblock %}
+
+{% block form_action %}/lists/new{% endblock %}
