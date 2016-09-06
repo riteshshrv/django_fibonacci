@@ -1,9 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerCase
 
 
-class FunctionalTest(LiveServerTestCase):
+class FunctionalTest(StaticLiveServerCase):
     def setUp(self):
         # User Chrome as its the mostly used browser
         self.browser = webdriver.Chrome()
