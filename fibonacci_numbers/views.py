@@ -39,7 +39,8 @@ def new_list(request):
         # the view middleware => return Http404
         return HttpResponseNotFound('Please enter a valid integer')
     else:
-        nth_number, list_ = find_or_create_nth_number(n)
+        list_ = List.objects.create()
+        nth_number, list_ = find_or_create_nth_number(n, list_)
 
     return redirect('/lists/%d' % list_.id)
 
