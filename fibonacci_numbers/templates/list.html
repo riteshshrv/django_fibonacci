@@ -5,7 +5,7 @@
 {% block form_action %}/lists/{{ list.id }}/add_to_list{% endblock %}
 
 {% block table %}
-<table id="id_numbers_table">
+<table id="id_numbers_table" class="table">
   {% for number in list.fibonacci_set.all %}
     <tr><td>{{ forloop.counter }}: {{ number.result }}</td></tr>
   {% endfor %}
