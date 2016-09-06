@@ -11,6 +11,11 @@ def get_fibonacci_number(n):
     return a
 
 
+class List(models.Model):
+    pass
+
+
 class Fibonacci(models.Model):
     parameter = models.IntegerField(primary_key=True)
+    list = models.ForeignKey(List, default=None)
     result = models.CharField(max_length=200)

@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.utils.six.moves.urllib.parse import urlsplit
 
 from fibonacci_numbers.views import home_page
-from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
+from fibonacci_numbers.models import Fibonacci, get_fibonacci_number, List
 
 
 class HomePageTest(TestCase):
@@ -20,17 +20,24 @@ class HomePageTest(TestCase):
         self.assertEqual(response.content.decode(), expected_html)
 
 
-class FibonacciModel(TestCase):
+class FibonacciAndListModelTest(TestCase):
     def test_saving_and_retrieving_numbers(self):
+        list_ = List()
+        list_.save()
         first_number = Fibonacci()
         first_number.parameter = 0
         first_number.result = str(get_fibonacci_number(0))
+        first_number.list = list_
         first_number.save()
 
         second_number = Fibonacci()
         second_number.parameter = 1
         second_number.result = str(get_fibonacci_number(1))
+        second_number.list = list_
         second_number.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual(saved_list, list_)
 
         saved_numbers = Fibonacci.objects.all()
         self.assertEqual(saved_numbers.count(), 2)
@@ -40,9 +47,11 @@ class FibonacciModel(TestCase):
         self.assertEqual(
             first_saved_number.result, str(get_fibonacci_number(0))
         )
+        self.assertEqual(first_saved_number.list, list_)
         self.assertEqual(
             second_saved_number.result, str(get_fibonacci_number(1))
         )
+        self.assertEqual(second_saved_number.list, list_)
 
 
 class UsersViewTest(TestCase):
@@ -51,14 +60,15 @@ class UsersViewTest(TestCase):
         self.assertTemplateUsed(response, 'list.html')
 
     def test_display_all_calculations(self):
+        list_ = List.objects.create()
         first_result = str(get_fibonacci_number(14))
         second_result = str(get_fibonacci_number(123))
 
         Fibonacci.objects.create(
-            parameter=14, result=first_result
+            parameter=14, list=list_, result=first_result
         )
         Fibonacci.objects.create(
-            parameter=123, result=second_result
+            parameter=123, list=list_, result=second_result
         )
 
         response = self.client.get('/lists/only-person/')

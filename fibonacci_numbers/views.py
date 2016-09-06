@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 
-from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
+from fibonacci_numbers.models import Fibonacci, get_fibonacci_number, List
 
 
 def find_or_create_nth_number(n):
@@ -9,7 +9,8 @@ def find_or_create_nth_number(n):
         result = Fibonacci.objects.get(pk=n)
     except ObjectDoesNotExist:
         result = str(get_fibonacci_number(n))
-        result = Fibonacci(n, result)
+        list_ = List.objects.create()
+        result = Fibonacci(parameter=n, list=list_, result=result)
         result.save()
     return result.result
 
