@@ -6,8 +6,11 @@ from fibonacci_numbers.models import Fibonacci, get_fibonacci_number, List
 
 
 def find_or_create_nth_number(n, list_=None):
+    query_set = {'parameter': n}
+    if list_:
+        query_set.update({'list': list_})
     try:
-        result = Fibonacci.objects.get(pk=n)
+        result = Fibonacci.objects.get(**query_set)
     except ObjectDoesNotExist:
         result = str(get_fibonacci_number(n))
         list_ = list_ or List.objects.create()
