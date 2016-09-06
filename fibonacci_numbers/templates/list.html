@@ -2,7 +2,7 @@
 
 {% block header_text %}Fibonacci Numbers{% endblock %}
 
-{% block form_action %}/lists/{{ list.id }}/add_to_list{% endblock %}
+{% block form_action %}{% url 'add_to_list' list.id %}{% endblock %}
 
 {% block table %}
 <table id="id_numbers_table" class="table">

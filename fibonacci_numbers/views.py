@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
+from django.http import HttpResponseNotFound
 
 from fibonacci_numbers.models import Fibonacci, get_fibonacci_number, List
 
@@ -22,9 +22,13 @@ def home_page(request):
     return render(request, 'home.html')
 
 def view_list(request, list_id):
-    list_ = List.objects.get(id=list_id)
-    numbers = Fibonacci.objects.filter(list=list_).order_by('-parameter')[:10]
-    return render(request, 'list.html', {'list': list_})
+    try:
+        list_ = List.objects.get(id=list_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('List with id %s was not found' % list_id)
+    else:
+        numbers = Fibonacci.objects.filter(list=list_).order_by('-parameter')[:10]
+        return render(request, 'list.html', {'list': list_})
 
 def new_list(request):
     try:
@@ -33,7 +37,7 @@ def new_list(request):
         # POST request made without any number
         # TODO: make custom page for 404 or override
         # the view middleware => return Http404
-        pass
+        return HttpResponseNotFound('Please enter a valid integer')
     else:
         nth_number, list_ = find_or_create_nth_number(n)
 
@@ -42,8 +46,8 @@ def new_list(request):
 def add_to_list(request, list_id):
     try:
         list_ = List.objects.get(id=list_id)
-    except List.DoesNotExist:
-        return Http404
+    except DoesNotExist:
+        return HttpResponseNotFound('List with id %s was not found' % list_id)
 
     try:
         n = int(request.POST.get('new_n'))
@@ -51,7 +55,7 @@ def add_to_list(request, list_id):
         # POST request made without any number
         # TODO: make custom page for 404 or override
         # the view middleware => return Http404
-        pass
+        return HttpResponseNotFound('Please enter a valid integer')
     else:
         find_or_create_nth_number(n, list_)
 
