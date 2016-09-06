@@ -1,12 +1,11 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from fibonacci_numbers import urls as fibonacci_numbers_urls
+
 urlpatterns = [
     url(r'^$', 'fibonacci_numbers.views.home_page', name='home'),
-    url(r'^lists/(\d+)/$', 'fibonacci_numbers.views.view_list', name='view_list'),
-    url(r'^lists/(\d+)/add_to_list$', 'fibonacci_numbers.views.add_to_list', name='add_to_list'),
-    url(r'lists/new', 'fibonacci_numbers.views.new_list', name='new_list')
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^lists/', include(fibonacci_numbers_urls)),
 
     # url(r'^admin/', include(admin.site.urls)),
 ]
