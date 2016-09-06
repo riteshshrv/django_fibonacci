@@ -3,10 +3,15 @@
     <title>Fibonacci Numbers</title>
   </head>
   <body>
-    <h1>Start Playing with Fibonacci Numbers</h1>
+    <h1>Fibonacci Numbers</h1>
     <form method="POST" action="/lists/new">
       <input name="new_n" id="id_new_n" placeholder="Enter 'N'" />
       {% csrf_token %}
     </form>
+    <table id="id_numbers_table">
+      {% for number in numbers %}
+        <tr><td>{{ forloop.counter }}: {{ number.result }}</td></tr>
+      {% endfor %}
+    </table>
   </body>
 </html>

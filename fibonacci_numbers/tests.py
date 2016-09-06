@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+from django.utils.six.moves.urllib.parse import urlsplit
 
 from fibonacci_numbers.views import home_page
 from fibonacci_numbers.models import Fibonacci, get_fibonacci_number
@@ -16,64 +17,6 @@ class HomePageTest(TestCase):
         request = HttpRequest()
         response = home_page(request)
         expected_html = render_to_string('home.html')
-        self.assertEqual(response.content.decode(), expected_html)
-
-    def test_home_page_can_save_a_POST_request(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['new_n'] = 6
-
-        response = home_page(request)
-
-        # This is the first request so a record should've been created
-        self.assertEqual(Fibonacci.objects.count(), 1)
-        new_nth_number = Fibonacci.objects.first()
-        self.assertEqual(new_nth_number.result, '8')
-
-    def test_home_page_displays_all_calculations(self):
-        first_result = str(get_fibonacci_number(14))
-        second_result = str(get_fibonacci_number(123))
-
-        Fibonacci.objects.create(
-            parameter=14, result=first_result
-        )
-        Fibonacci.objects.create(
-            parameter=123, result=second_result
-        )
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn(first_result, response.content.decode())
-        self.assertIn(second_result, response.content.decode())
-
-
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['new_n'] = 6
-
-        response = home_page(request)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
-    def test_home_page_creates_record_only_when_necessary(self):
-        """
-        If a POST request is made without any number then
-        (at least for now) a GET request is rendered
-        """
-        request = HttpRequest()
-        request.method = 'POST'
-
-        response = home_page(request)
-
-        # No numbers were give in the input tag so, no records
-        # should be created
-        self.assertEqual(Fibonacci.objects.count(), 0)
-
-        # self.assertIn('8', response.content.decode())
-        expected_html = render_to_string('home.html', {'new_nth_number': ''})
         self.assertEqual(response.content.decode(), expected_html)
 
 
@@ -99,4 +42,46 @@ class FibonacciModel(TestCase):
         )
         self.assertEqual(
             second_saved_number.result, str(get_fibonacci_number(1))
+        )
+
+
+class UsersViewTest(TestCase):
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/only-person/')
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_display_all_calculations(self):
+        first_result = str(get_fibonacci_number(14))
+        second_result = str(get_fibonacci_number(123))
+
+        Fibonacci.objects.create(
+            parameter=14, result=first_result
+        )
+        Fibonacci.objects.create(
+            parameter=123, result=second_result
+        )
+
+        response = self.client.get('/lists/only-person/')
+
+        self.assertContains(response, first_result)
+        self.assertContains(response, second_result)
+
+
+class NewListTest(TestCase):
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/lists/new', data={'new_n': 6}
+        )
+        self.assertEqual(Fibonacci.objects.count(), 1)
+        first_result = Fibonacci.objects.first()
+        self.assertEqual(first_result.result, '8')
+
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/lists/new', data={'new_n': 6}
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            urlsplit(response['location']).path, '/lists/only-person'
         )
