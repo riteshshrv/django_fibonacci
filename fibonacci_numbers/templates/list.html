@@ -4,12 +4,12 @@
   </head>
   <body>
     <h1>Fibonacci Numbers</h1>
-    <form method="POST" action="/lists/new">
+    <form method="POST" action="/lists/{{ list.id }}/add_to_list">
       <input name="new_n" id="id_new_n" placeholder="Enter 'N'" />
       {% csrf_token %}
     </form>
     <table id="id_numbers_table">
-      {% for number in numbers %}
+      {% for number in list.fibonacci_set.all %}
         <tr><td>{{ forloop.counter }}: {{ number.result }}</td></tr>
       {% endfor %}
     </table>
