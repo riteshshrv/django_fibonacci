@@ -1,0 +1,6 @@
+Django==1.8
+ipython==5.1.0
+ipython-genutils==0.1.0
+selenium==2.53.6
+six==1.10.0
+sqlparse==0.2.1
